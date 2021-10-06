@@ -8,9 +8,21 @@ import {
   View,
 } from "react-native";
 import * as Location from "expo-location";
+import { Fontisto } from "@expo/vector-icons";
 import { API_KEY } from "@env";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+// Match icons with possible weather outcomes
+const icons = {
+  Clear: "day-sunny",
+  Clouds: "cloudy",
+  Rain: "rains",
+  Drizzle: "rain",
+  Snow: "snow",
+  Thunderstorm: "lightning",
+  Atmosphere: "cloudy-gusts",
+};
 
 export default function App() {
   const [ok, setOk] = useState(true);
@@ -59,15 +71,29 @@ export default function App() {
         pagingEnabled
       >
         {days.length === 0 ? (
-          <View style={styles.day}>
-            <ActivityIndicator color="White" size="large" />
+          <View style={{ ...styles.day, alignItems: "center" }}>
+            <ActivityIndicator color="white" size="large" />
           </View>
         ) : (
           days.map((day, index) => (
             <View key={index} style={styles.day}>
-              <Text style={styles.temp}>
-                {parseFloat(day.temp.day).toFixed(1)}
-              </Text>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={styles.temp}>
+                  {parseFloat(day.temp.day).toFixed(1)}°
+                </Text>
+                <Fontisto
+                  name={icons[day.weather[0].main]}
+                  size={45}
+                  color="white"
+                />
+              </View>
               <Text style={styles.description}>{day.weather[0].main}</Text>
               <Text style={styles.smallText}>{day.weather[0].description}</Text>
             </View>
@@ -89,24 +115,34 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cityName: {
-    fontSize: 40,
+    fontSize: 45,
     fontWeight: "bold",
+    color: "white",
   },
   weather: {},
   day: {
     width: SCREEN_WIDTH,
-    alignItems: "center",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   temp: {
     marginTop: 50,
-    fontSize: 140,
+    fontSize: 100,
     fontWeight: "bold",
+    color: "white",
   },
   description: {
-    marginTop: -30,
+    marginTop: -10,
     fontSize: 60,
+    fontWeight: "500",
+    color: "white",
   },
   smallText: {
-    fontSize: 20,
+    marginTop: -10,
+    fontSize: 25,
+    fontWeight: "500",
+    color: "white",
   },
 });
